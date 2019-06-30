@@ -32,7 +32,7 @@ pair* find_dead_ends(short* maze, pair size, int* num_de) {
     for(int j = 1; j < size.col - 1; j++) {
       if(maze[i * size.col + j]) continue;
       pair pos = {i, j};
-      if(find_num_walls(maze, size, pos) == 3) {
+      if(find_num_walls(maze, size, pos) >= 3) {
 	dead_ends = realloc(dead_ends, sizeof(pair) * ++(*num_de));
 	dead_ends[(*num_de) - 1] = pos;
       }
@@ -55,7 +55,7 @@ int reduce_dead_ends(short* maze, pair size, pair* dead_ends, int num_de) {
   for(int n = 0; n < num_de; n++) {
     pair pos = dead_ends[n];
     pair dir = {0, 0};
-    while(find_num_walls(maze, size, pos) == 3) {
+    while(find_num_walls(maze, size, pos) >= 3) {
       maze[pos.row * size.col + pos.col] = 1;
       short next_cell = get_next_cell(maze, size, pos, dir);
       if(next_cell == -1) {
@@ -66,6 +66,9 @@ int reduce_dead_ends(short* maze, pair size, pair* dead_ends, int num_de) {
 	//find new direction
 	dir = find_next_dir(maze, size, pos);
       }
+      if(dir.row == 0 && dir.col == 0) break;
+      pos.row += dir.row;
+      pos.col += dir.col;
     }
   }
   return 0;
