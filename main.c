@@ -13,5 +13,8 @@ int main(int argc, char* argv[]) {
   for(int i = 0; i < num_de; i++) {
     printf("Found dead end at %d, %d.\n", dead_ends[i].row, dead_ends[i].col);
   }
+  reduce_dead_ends(maze, size, dead_ends, num_de);
+  free(dead_ends);
+  print_maze(maze, size);
   return 0;
 }
