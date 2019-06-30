@@ -1,5 +1,9 @@
 //#include "pair.h"
 
+int get_cell(short* maze, pair size, pair pos) {
+  return maze[pos.row * size.col + pos.col];
+}
+
 pair get_dir(int num) {
   if(num < 0 || num >= 4) num = num % 4;
   if(num == 0) return (pair){-1, 0};
@@ -51,7 +55,7 @@ pair find_next_dir(short* maze, pair size, pair pos) {
   return (pair){0, 0};
 }
 
-int reduce_dead_ends(short* maze, pair size, pair* dead_ends, int num_de) {
+void reduce_dead_ends(short* maze, pair size, pair* dead_ends, int num_de) {
   for(int n = 0; n < num_de; n++) {
     pair pos = dead_ends[n];
     pair dir = {0, 0};
@@ -67,9 +71,22 @@ int reduce_dead_ends(short* maze, pair size, pair* dead_ends, int num_de) {
       pos.col += dir.col;
     }
   }
-  return 0;
 }
 
 int find_endpoints(short* maze, pair size, pair* start, pair* end) {
+  *start = {0, 0};
+  *end = {0, 0};
+  pair start_pos = {0, size.col - 1};
+  while(!get_cell(maze, size, start_pos)) {
+    start_pos.row++;
+  }
+  pair pos = start_pos;
+  int dir_num = 1;
+  //traverse the perimiter of the maze, clockwise
+  do {
+    //TODO
+  } while(!(pos.row == start_pos.row && pos.col == start_pos.col));
+  if(start->row == 0 && start->col == 0) return -3;
+  if(end->row == 0 && end->col == 0) return -4;
   return 0;
 }
