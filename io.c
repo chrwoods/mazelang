@@ -1,9 +1,10 @@
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #define MAX_MAZE_WIDTH 50000
 
-short** load_maze(char* filepath, int* rows, int* cols) {
+short* load_maze(char* filepath, int* rows, int* cols) {
 	FILE* fp;
 	fp = fopen(filepath, "r");
 	if (fp == NULL) {
@@ -53,16 +54,20 @@ short** load_maze(char* filepath, int* rows, int* cols) {
 	return maze;
 }
 
+void print_maze(short* maze, int rows, int cols) {
+  for (int i = 0; i < rows; i++) {
+    for (int j = 0; j < cols; j++) {
+      printf(maze[i * cols + j] ? "#" : " ");
+    }
+    printf("\n");
+  }
+}
+
 int main(int argc, char* argv[]) {
 	int rows, cols;
 	short* maze = load_maze("maze1.txt", &rows, &cols);
 	printf("Rows: %d, Cols: %d\n", rows, cols);
-	for (int i = 0; i < rows; i++) {
-		for (int j = 0; j < cols; j++) {
-			printf("%d", maze[i * cols + j]);
-		}
-		printf("\n");
-	}
+	print_maze(maze, rows, cols);
 	free(maze);
 	return 0;
 }
