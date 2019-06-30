@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "pair.h"
+//#include "pair.h"
 
 #define MAX_MAZE_WIDTH 50000
 
@@ -31,7 +31,6 @@ short* load_maze(char* filepath, pair* size) {
 	for (int i = 0; i < size->row; i++) {
 		for (int j = 0; j < size->col; j++) {
 			char c = fgetc(fp);
-			printf("%c", c);
 			if (c == '\n') {
 				if (j == 0) {
 					j--;
@@ -63,13 +62,4 @@ void print_maze(short* maze, pair size) {
     }
     printf("\n");
   }
-}
-
-int main(int argc, char* argv[]) {
-  pair size;
-  short* maze = load_maze("maze1.txt", &size);
-  printf("Rows: %d, Cols: %d\n", size.row, size.col);
-  print_maze(maze, size);
-  free(maze);
-  return 0;
 }
