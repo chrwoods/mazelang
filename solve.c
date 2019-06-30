@@ -58,11 +58,7 @@ int reduce_dead_ends(short* maze, pair size, pair* dead_ends, int num_de) {
     while(find_num_walls(maze, size, pos) >= 3) {
       maze[pos.row * size.col + pos.col] = 1;
       short next_cell = get_next_cell(maze, size, pos, dir);
-      if(next_cell == -1) {
-	//maze is unsolvable, or we have gone horribly wrong somewhere
-	//(assume unsolvable)
-	return -1;
-      } else if (next_cell == 1) {
+      if(next_cell) {
 	//find new direction
 	dir = find_next_dir(maze, size, pos);
       }
@@ -71,5 +67,9 @@ int reduce_dead_ends(short* maze, pair size, pair* dead_ends, int num_de) {
       pos.col += dir.col;
     }
   }
+  return 0;
+}
+
+int find_endpoints(short* maze, pair size, pair* start, pair* end) {
   return 0;
 }
