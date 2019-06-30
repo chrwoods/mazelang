@@ -2,9 +2,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "pair.h"
+
 #define MAX_MAZE_WIDTH 50000
 
-short* load_maze(char* filepath, int* rows, int* cols) {
+short* load_maze(char* filepath, pair* size) {
 	FILE* fp;
 	fp = fopen(filepath, "r");
 	if (fp == NULL) {
@@ -12,22 +14,22 @@ short* load_maze(char* filepath, int* rows, int* cols) {
 		return NULL;
 	}
 	//get size of maze
-	*rows = 0;
-	*cols = 0;
+	size->row = 0;
+	size->col = 0;
 	char* line = malloc(sizeof(char) * MAX_MAZE_WIDTH);
 	while (!feof(fp)) {
 		int row_length;
 		if(fgets(line, MAX_MAZE_WIDTH, fp) == NULL) break;
 		row_length = strlen(line);
 		if (line[row_length - 1] == '\n') row_length--;
-		if (*cols < row_length) *cols = row_length;
-		(*rows)++;
+		if (size->col < row_length) size->col = row_length;
+		(size->row)++;
 	}
 	rewind(fp);
 	//fill maze array
-	short* maze = malloc(sizeof(short) * *rows * *cols);
-	for (int i = 0; i < *rows; i++) {
-		for (int j = 0; j < *cols; j++) {
+	short* maze = malloc(sizeof(short) * size->row * size->col);
+	for (int i = 0; i < size->row; i++) {
+		for (int j = 0; j < size->col; j++) {
 			char c = fgetc(fp);
 			printf("%c", c);
 			if (c == '\n') {
@@ -36,16 +38,16 @@ short* load_maze(char* filepath, int* rows, int* cols) {
 					continue;
 				}
 				// fill in the rest of the maze row
-				while (j < *cols) {
-					maze[i * *cols + j++] = 0;
+				while (j < size->col) {
+					maze[i * size->col + j++] = 0;
 				}
 				break;
 			}
 			else if (c == ' ') {
-				maze[i * *cols + j] = 0;
+				maze[i * size->col + j] = 0;
 			}
 			else {
-				maze[i * *cols + j] = 1;
+				maze[i * size->col + j] = 1;
 			}
 		}
 	}
@@ -54,20 +56,20 @@ short* load_maze(char* filepath, int* rows, int* cols) {
 	return maze;
 }
 
-void print_maze(short* maze, int rows, int cols) {
-  for (int i = 0; i < rows; i++) {
-    for (int j = 0; j < cols; j++) {
-      printf(maze[i * cols + j] ? "#" : " ");
+void print_maze(short* maze, pair size) {
+  for (int i = 0; i < size.row; i++) {
+    for (int j = 0; j < size.col; j++) {
+      printf(maze[i * size.col + j] ? "#" : " ");
     }
     printf("\n");
   }
 }
 
 int main(int argc, char* argv[]) {
-	int rows, cols;
-	short* maze = load_maze("maze1.txt", &rows, &cols);
-	printf("Rows: %d, Cols: %d\n", rows, cols);
-	print_maze(maze, rows, cols);
-	free(maze);
-	return 0;
+  pair size;
+  short* maze = load_maze("maze1.txt", &size);
+  printf("Rows: %d, Cols: %d\n", size.row, size.col);
+  print_maze(maze, size);
+  free(maze);
+  return 0;
 }
