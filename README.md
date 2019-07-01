@@ -1,7 +1,7 @@
 # mazelang
 Esoteric maze-based programming language
 
-# todo:
+# Todo:
 This language is stack-based, with instructions based on the number of spaces in between turns:
 0-1: Do nothing
 2: Control flow
