@@ -58,7 +58,30 @@ short* load_maze(char* filepath, pair* size) {
 void print_maze(short* maze, pair size) {
   for (int i = 0; i < size.row; i++) {
     for (int j = 0; j < size.col; j++) {
-      printf(maze[i * size.col + j] ? "#" : " ");
+      short cell = maze[i * size.col + j];
+      if(cell == 2) {
+      	printf("A");
+      } else if(cell == 3) {
+	printf("B");
+      } else if(cell) {
+	printf("#");
+      } else {
+	printf(" ");
+      }
+    }
+    printf("\n");
+  }
+}
+
+void print_big_maze(short* maze, pair size) {
+  for (int i = 0; i < size.row; i++) {
+    for (int j = 0; j < size.col; j++) {
+      short cell = maze[i * size.col + j];
+      if(cell) {
+	printf("%02d", cell);
+      } else {
+	printf("  ");
+      }
     }
     printf("\n");
   }

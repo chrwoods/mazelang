@@ -75,12 +75,13 @@ void reduce_dead_ends(short* maze, pair size, pair* dead_ends, int num_de) {
       pos.col += dir.col;
     }
   }
+  free(dead_ends);
 }
 
 //currently deprecated
 int find_endpoints(short* maze, pair size, pair* start, pair* end) {
-  *start = {0, 0};
-  *end = {0, 0};
+  *start = (pair){0, 0};
+  *end = (pair){0, 0};
   pair start_pos = {0, size.col - 1};
   while(!get_cell(maze, size, start_pos)) {
     start_pos.row++;
@@ -97,52 +98,54 @@ int find_endpoints(short* maze, pair size, pair* start, pair* end) {
 }
 
 int expand_island(short* maze, pair size, pair pos, short marker) {
-  if(!get_cell(maze, size, pos)) return 0;
+  if(get_cell(maze, size, pos) != 1) return 0;
 
   set_cell(maze, size, pos, marker);
-  int size = 1;
+  int land = 1;
 
   for(int i = -1; i <= 1; i++) {
     for(int j = -1; j <= 1; j++) {
-      if(i | j == 0)
-      size += expand_island(maze, size, pos, num);
+      if(i == 0 && j == 0) continue;
+      if(pos.row + i < 0 || pos.row + i >= size.row) continue;
+      if(pos.col + j < 0 || pos.col + j >= size.col) continue;
+      pair new_pos = (pair){pos.row + i, pos.col + j};
+      land += expand_island(maze, size, new_pos, marker);
     }
   }
 
-  return size;
+  return land;
 }
 
 int set_islands(short* maze, pair size) {
-  int land = 0;
+  int total_land = 0;
   for(int i = 0; i < size.row; i++) {
     for(int j = 0; j < size.col; j++) {
-      sum += maze[i * size.col + j];
+      total_land += maze[i * size.col + j];
     }
   }
 
   for(int i = 0; i < size.row; i++) {
     for(int j = 0; j < size.col; j++) {
       if(maze[i * size.col + j]) {
-	sum -= expand_island(maze, size, (pair){i, j}, 2);
+	total_land -= expand_island(maze, size, (pair){i, j}, 2);
+	i = size.row;
 	break;
       }
     }
   }
 
-  if(sum <= 0) return -1;
+  if(total_land <= 0) return -1;
 
   for(int i = size.row - 1; i >= 0; i--) {
     for(int j = size.col - 1; j >= 0; j--) {
       if(maze[i * size.col + j] == 1) {
-	sum -= expand_island(maze, size, (pair){i, j}, 3);
+	total_land -= expand_island(maze, size, (pair){i, j}, 3);
+	i = size.row;
 	break;
       }
     }
   }
 
-  if(sum > 0) return -2;
+  if(total_land > 0) return -2;
+  return 0;
 }
-
-  
-
-  
