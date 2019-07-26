@@ -1,7 +1,11 @@
 //#include "pair.h"
 
-int get_cell(short* maze, pair size, pair pos) {
+short get_cell(short* maze, pair size, pair pos) {
   return maze[pos.row * size.col + pos.col];
+}
+
+void set_cell(short* maze, pair size, pair pos, short val) {
+  maze[pos.row * size.col + pos.col] = val;
 }
 
 pair get_dir(int num) {
@@ -73,6 +77,7 @@ void reduce_dead_ends(short* maze, pair size, pair* dead_ends, int num_de) {
   }
 }
 
+//currently deprecated
 int find_endpoints(short* maze, pair size, pair* start, pair* end) {
   *start = {0, 0};
   *end = {0, 0};
@@ -90,3 +95,54 @@ int find_endpoints(short* maze, pair size, pair* start, pair* end) {
   if(end->row == 0 && end->col == 0) return -4;
   return 0;
 }
+
+int expand_island(short* maze, pair size, pair pos, short marker) {
+  if(!get_cell(maze, size, pos)) return 0;
+
+  set_cell(maze, size, pos, marker);
+  int size = 1;
+
+  for(int i = -1; i <= 1; i++) {
+    for(int j = -1; j <= 1; j++) {
+      if(i | j == 0)
+      size += expand_island(maze, size, pos, num);
+    }
+  }
+
+  return size;
+}
+
+int set_islands(short* maze, pair size) {
+  int land = 0;
+  for(int i = 0; i < size.row; i++) {
+    for(int j = 0; j < size.col; j++) {
+      sum += maze[i * size.col + j];
+    }
+  }
+
+  for(int i = 0; i < size.row; i++) {
+    for(int j = 0; j < size.col; j++) {
+      if(maze[i * size.col + j]) {
+	sum -= expand_island(maze, size, (pair){i, j}, 2);
+	break;
+      }
+    }
+  }
+
+  if(sum <= 0) return -1;
+
+  for(int i = size.row - 1; i >= 0; i--) {
+    for(int j = size.col - 1; j >= 0; j--) {
+      if(maze[i * size.col + j] == 1) {
+	sum -= expand_island(maze, size, (pair){i, j}, 3);
+	break;
+      }
+    }
+  }
+
+  if(sum > 0) return -2;
+}
+
+  
+
+  
