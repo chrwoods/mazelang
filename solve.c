@@ -149,3 +149,64 @@ int set_islands(short* maze, pair size) {
   if(total_land > 0) return -2;
   return 0;
 }
+
+short check_bisector(short* maze, pair size, int index) {
+  if(index < 0) {
+    //check for a horizontal bisector
+    index *= -1;
+    if(index >= size.row) return -1;
+    short check = 0;
+    pair pos = {index, 0};
+    for(pos.col = 0; pos.col < size.col; pos.col++) {
+      switch(get_cell(maze, size, pos)) {
+      case 0:
+	continue;
+	break;
+      case 2:
+	check |= 1;
+	break;
+      case 3:
+	check |= 2;
+	break;
+      }
+      if(check == 3) return 1;
+    }
+    return 0;
+  } else {
+    //check for a vertical bisector
+    if(index >= size.col) return -1;
+    short check = 0;
+    pair pos = {0, index};
+    for(pos.row = 0; pos.row < size.row; pos.row++) {
+      switch(get_cell(maze, size, pos)) {
+      case 0:
+	continue;
+	break;
+      case 2:
+	check |= 1;
+	break;
+      case 3:
+	check |= 2;
+	break;
+      }
+      if(check == 3) return 1;
+    }
+    return 0;
+  }
+}
+
+int find_bisector(short* maze, pair size) {
+  int index = size.col / 2;
+  if(check_bisector(maze, size, index) == 1) return index;
+  index = size.row / -2;
+  if(check_bisector(maze, size, index) == 1) return index;
+  index = (3 * size.col) / 4;
+  if(check_bisector(maze, size, index) == 1) return index;
+  index = size.col / 4;
+  if(check_bisector(maze, size, index) == 1) return index;
+  for(index = 1; index < size.col; index++) {
+    if(check_bisector(maze, size, index) == 1) return index;
+  }
+  //we should never, ever get here
+  return 0;
+}

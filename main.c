@@ -14,5 +14,6 @@ int main(int argc, char* argv[]) {
   print_maze(maze, size);
   set_islands(maze, size);
   print_maze(maze, size);
+  printf("Found bisector at index %d.\n", find_bisector(maze, size));
   return 0;
 }
