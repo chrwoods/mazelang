@@ -210,3 +210,30 @@ int find_bisector(short* maze, pair size) {
   //we should never, ever get here
   return 0;
 }
+
+pair find_start_pos(short* maze, pair size, int bisector) {
+  //note: currently we only support a one-wide maze
+  if(bisector < 0) {
+    pair cur;
+    cur.row = bisector * -1;
+    for(cur.col = 1; cur.col < size.col - 1; cur.col++) {
+      if(get_cell(maze, size, cur) == 0) {
+	if(get_next_cell(maze, size, cur, get_dir(1)) + get_next_cell(maze, size, cur, get_dir(3)) == 5) {
+	  return cur;
+	}
+      }
+    }
+  } else {
+    pair cur;
+    cur.col = bisector;
+    for(cur.row = 1; cur.row < size.row - 1; cur.row++) {
+      if(get_cell(maze, size, cur) == 0) {
+	if(get_next_cell(maze, size, cur, get_dir(0)) + get_next_cell(maze, size, cur, get_dir(2)) == 5) {
+	  return cur;
+	}
+      }
+    }
+  }
+  //this will only happen if the path is too wide
+  return (pair){0, 0};
+}
