@@ -3,8 +3,12 @@
 #include "solve.c"
 
 int main(int argc, char* argv[]) {
+  char* to_load = "maze2.txt";
+  if(argc > 1) {
+    to_load = argv[1];
+  }
   pair size;
-  short* maze = load_maze("maze2.txt", &size);
+  short* maze = load_maze(to_load, &size);
   printf("Rows: %d, Cols: %d\n", size.row, size.col);
   print_maze(maze, size);
   free(maze);
