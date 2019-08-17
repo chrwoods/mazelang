@@ -63,6 +63,8 @@ void print_maze(short* maze, pair size) {
       	printf("A");
       } else if(cell == 3) {
 	printf("B");
+      } else if(cell == 4) {
+	printf(".");
       } else if(cell) {
 	printf("#");
       } else {

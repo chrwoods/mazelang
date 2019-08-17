@@ -10,6 +10,7 @@ void set_cell(short* maze, pair size, pair pos, short val) {
 
 pair get_dir(int num) {
   if(num < 0 || num >= 4) num = num % 4;
+  if(num < 0) num += 4;
   if(num == 0) return (pair){-1, 0};
   else if(num == 1) return (pair){0, 1};
   else if(num == 2) return (pair){1, 0};
@@ -20,6 +21,14 @@ int get_next_cell(short* maze, pair size, pair pos, pair dir) {
   if(pos.row + dir.row < 0 || pos.row + dir.row >= size.row) return -1;
   if(pos.col + dir.col < 0 || pos.col + dir.col >= size.col) return -1;
   return maze[(pos.row + dir.row) * size.col + pos.col + dir.col];
+}
+
+pair get_next_pos(pair cur, int dir) {
+  pair next;
+  pair direction = get_dir(dir);
+  next.row = cur.row + direction.row;
+  next.col = cur.col + direction.col;
+  return next;
 }
 
 short find_num_walls(short* maze, pair size, pair pos) {
@@ -236,4 +245,40 @@ pair find_start_pos(short* maze, pair size, int bisector) {
   }
   //this will only happen if the path is too wide
   return (pair){0, 0};
+}
+
+int expand_path(short* maze, pair size, pair cur, int dir) {
+  set_cell(maze, size, cur, 4);
+
+  if(find_num_walls(maze, size, cur) != 3) {
+    return 0;
+  }
+
+  if(!get_next_cell(maze, size, cur, get_dir(dir))) {
+    return expand_path(maze, size, get_next_pos(cur, dir), dir);
+  } else if(!get_next_cell(maze, size, cur, get_dir(dir - 1))) {
+    return expand_path(maze, size, get_next_pos(cur, dir - 1), dir - 1);
+  } else {
+    return expand_path(maze, size, get_next_pos(cur, dir + 1), dir + 1);
+  }
+}
+
+int start_expanding_path(short* maze, pair size, pair start) {
+  /*if(find_num_walls(maze, size, start != 2)) {
+    return -1;
+    }*/
+
+  set_cell(maze, size, start, 4);
+
+  int return_code = 0;
+  for(int dir = 0; dir < 4; dir++) {
+    if(get_next_cell(maze, size, start, get_dir(dir))) {
+      continue;
+    }
+    if(expand_path(maze, size, get_next_pos(start, dir), dir) < 0) {
+      return -1;
+    }
+  }
+
+  return 0;
 }
