@@ -247,11 +247,11 @@ pair find_start_pos(short* maze, pair size, int bisector) {
   return (pair){0, 0};
 }
 
-int expand_path(short* maze, pair size, pair cur, int dir) {
+pair expand_path(short* maze, pair size, pair cur, int dir) {
   set_cell(maze, size, cur, 4);
 
   if(find_num_walls(maze, size, cur) != 3) {
-    return 0;
+    return cur;
   }
 
   if(!get_next_cell(maze, size, cur, get_dir(dir))) {
@@ -263,22 +263,29 @@ int expand_path(short* maze, pair size, pair cur, int dir) {
   }
 }
 
-int start_expanding_path(short* maze, pair size, pair start) {
+pair find_path(short* maze, pair size, pair start) {
   /*if(find_num_walls(maze, size, start != 2)) {
     return -1;
     }*/
 
   set_cell(maze, size, start, 4);
 
-  int return_code = 0;
+  pair path_start = size;
   for(int dir = 0; dir < 4; dir++) {
     if(get_next_cell(maze, size, start, get_dir(dir))) {
       continue;
     }
-    if(expand_path(maze, size, get_next_pos(start, dir), dir) < 0) {
-      return -1;
+    pair endpoint = expand_path(maze, size, get_next_pos(start, dir), dir);
+    if(endpoint.col < path_start.col) {
+      path_start = endpoint;
+    } else if (endpoint.col == path_start.col && endpoint.row < path_start.row) {
+      path_start = endpoint;
     }
   }
 
-  return 0;
+  if(path_start.row == size.row && path_start.col == size.col) {
+    return (pair){0, 0};
+  }
+  return path_start;
 }
+

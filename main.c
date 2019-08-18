@@ -22,7 +22,8 @@ int main(int argc, char* argv[]) {
   printf("Found bisector at index %d.\n", bisector);
   pair start = find_start_pos(maze, size, bisector);
   printf("Found starting pos at %d, %d.\n", start.row, start.col);
-  start_expanding_path(maze, size, start);
+  pair path_start = find_path(maze, size, start);
   print_maze(maze, size);
+  printf("Found path start at %d, %d.\n", path_start.row, path_start.col);
   return 0;
 }
