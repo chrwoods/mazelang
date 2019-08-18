@@ -258,9 +258,11 @@ pair expand_path(short* maze, pair size, pair cur, int dir) {
     return expand_path(maze, size, get_next_pos(cur, dir), dir);
   } else if(!get_next_cell(maze, size, cur, get_dir(dir - 1))) {
     return expand_path(maze, size, get_next_pos(cur, dir - 1), dir - 1);
-  } else {
+  } else if(!get_next_cell(maze, size, cur, get_dir(dir + 1))) {
     return expand_path(maze, size, get_next_pos(cur, dir + 1), dir + 1);
   }
+
+  return cur;
 }
 
 pair find_path(short* maze, pair size, pair start) {
