@@ -25,5 +25,12 @@ int main(int argc, char* argv[]) {
   pair path_start = find_path(maze, size, start);
   print_maze(maze, size);
   printf("Found path start at %d, %d.\n", path_start.row, path_start.col);
+  int num_instructions;
+  short* instructions = get_instructions(maze, size, path_start, &num_instructions);
+  printf("Found %d instructions:\n", num_instructions);
+  for(int i = 0; i < num_instructions; i++) {
+    printf("%d ", instructions[i]);
+  }
+  printf("\n");
   return 0;
 }

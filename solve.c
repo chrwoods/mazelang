@@ -299,7 +299,7 @@ short* get_instructions(short* maze, pair size, pair path_start, int* num_instru
   pair cur = path_start;
   short dir = -1;
   for(short i = 0; i < 4; i++) {
-    if(get_next_cell(maze, size, cur, get_dir(i) == 4)) {
+    if(get_next_cell(maze, size, cur, get_dir(i)) == 4) {
       dir = i;
       break;
     }
@@ -308,7 +308,7 @@ short* get_instructions(short* maze, pair size, pair path_start, int* num_instru
     return NULL;
   }
 
-  while(get_next_cell(maze, size, cur, get_dir(dir) == 4)) {
+  while(get_next_cell(maze, size, cur, get_dir(dir)) == 4) {
     set_cell(maze, size, cur, 5);
     cur = get_next_pos(cur, dir);
   }
@@ -316,12 +316,27 @@ short* get_instructions(short* maze, pair size, pair path_start, int* num_instru
   short dist = 0;
   while(1) {
     set_cell(maze, size, cur, 5);
-    if(get_next_cell(maze, size, cur, get_dir(dir) != 4)) {
-      //do stuff
+    if(get_next_cell(maze, size, cur, get_dir(dir)) != 4) {
+      if(get_next_cell(maze, size, cur, get_dir(dir + 1)) == 4) {
+	dir++;
+      } else if(get_next_cell(maze, size, cur, get_dir(dir - 1)) == 4) {
+	dir--;
+      } else {
+	break;
+      }
+      //add new instruction
+      if(*num_instructions >= instruction_size) {
+	instruction_size *= 2;
+	instructions = realloc(instructions, instruction_size * sizeof(short));
+      }
+      instructions[(*num_instructions)++] = dist;
+      dist = 0;
     } else {
       dist++;
     }
+    cur = get_next_pos(cur, dir);
   }
 
+  instructions = realloc(instructions, *num_instructions * sizeof(short));
   return instructions;
 }
