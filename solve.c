@@ -1,4 +1,5 @@
 //#include "pair.h"
+#define INITIAL_INSTRUCTION_SIZE 50
 
 short get_cell(short* maze, pair size, pair pos) {
   return maze[pos.row * size.col + pos.col];
@@ -291,3 +292,36 @@ pair find_path(short* maze, pair size, pair start) {
   return path_start;
 }
 
+short* get_instructions(short* maze, pair size, pair path_start, int* num_instructions) {
+  int instruction_size = INITIAL_INSTRUCTION_SIZE;
+  short* instructions = malloc(instruction_size * sizeof(short));
+  *num_instructions = 0;
+  pair cur = path_start;
+  short dir = -1;
+  for(short i = 0; i < 4; i++) {
+    if(get_next_cell(maze, size, cur, get_dir(i) == 4)) {
+      dir = i;
+      break;
+    }
+  }
+  if(dir == -1) {
+    return NULL;
+  }
+
+  while(get_next_cell(maze, size, cur, get_dir(dir) == 4)) {
+    set_cell(maze, size, cur, 5);
+    cur = get_next_pos(cur, dir);
+  }
+
+  short dist = 0;
+  while(1) {
+    set_cell(maze, size, cur, 5);
+    if(get_next_cell(maze, size, cur, get_dir(dir) != 4)) {
+      //do stuff
+    } else {
+      dist++;
+    }
+  }
+
+  return instructions;
+}
